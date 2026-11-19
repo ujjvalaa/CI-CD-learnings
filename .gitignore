@@ -1,0 +1,15 @@
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Local environment variables
+.env
+
+# Generated ML model artifacts
+models/*.joblib
+models/*.pkl
