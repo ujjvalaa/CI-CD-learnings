@@ -9,13 +9,15 @@ def load_data():
     df = pd.read_csv(DATA_PATH)
     return df
 
+def check_missing_values(df):
+    missing_values = df.isnull().sum()
+    return missing_values
+
 
 if __name__ == "__main__":
     df = load_data()
 
     print("Dataset shape:", df.shape)
-    print("\nFirst 5 rows:")
-    print(df.head())
 
-    print("\nColumn types:")
-    print(df.dtypes)
+    print("\nMissing values:")
+    print(check_missing_values(df))
