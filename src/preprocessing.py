@@ -27,12 +27,30 @@ def fix_total_charges(df):
     # 4. Return the cleaned copy
     return df
 
+def encode_features(df):
+    df = df.copy()
+
+    # Drop the ID column - it's just a label, not useful for prediction
+    df = df.drop(columns=["customerID"])
+
+    # Yes/No columns -> 1/0
+    yes_no_cols = ["Partner", "Dependents", "PhoneService", "PaperlessBilling", "Churn"]
+    for col in yes_no_cols:
+        df[col] = df[col].map({"Yes": 1, "No": 0})
+
+    # Remaining text columns -> one-hot encoding
+    text_cols = df.select_dtypes(exclude="number").columns
+    df = pd.get_dummies(df, columns=text_cols, drop_first=True, dtype=int)
+
+    return df
+
 
 if __name__ == "__main__":
     df = fix_total_charges(load_data())
+    encoded = encode_features(df)
 
-    print("Dataset shape:", df.shape)
-    print("TotalCharges type:", df["TotalCharges"].dtype)
-
-    print("\nMissing values:")
-    print(check_missing_values(df))
+    print("Before:", df.shape)
+    print("After: ", encoded.shape)
+    print("\nAll numeric?", encoded.select_dtypes(exclude="number").empty)
+    print("\nColumns:")
+    print(list(encoded.columns))
